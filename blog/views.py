@@ -17,11 +17,30 @@ def blog_single(request, pk):
     post.counted_view += 1
     post.save(update_fields=['counted_view'])
 
-    recent_posts = Post.objects.filter(
-        published_date__lte=timezone.now()
-    ).exclude(pk=post.pk)[:4]
+    # لیست کلی پست‌های منتشرشده (مرتب بر اساس تاریخ انتشار، از قدیم به جدید)
+    published_posts = list(
+        Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    )
+
+    previous_post = None
+    next_post = None
+
+    if post in published_posts:
+        current_index = published_posts.index(post)
+
+        # اگر آیتمی قبل از ایندکس فعلی وجود داشته باشد
+        if current_index > 0:
+            previous_post = published_posts[current_index - 1]
+
+        # اگر آیتمی بعد از ایندکس فعلی وجود داشته باشد
+        if current_index < len(published_posts) - 1:
+            next_post = published_posts[current_index + 1]
+
+    recent_posts = [p for p in published_posts if p.pk != post.pk][:4]
 
     return render(request, 'blog/blog-single.html', {
         'post': post,
+        'previous_post': previous_post,
+        'next_post': next_post,
         'recent_posts': recent_posts,
     })
