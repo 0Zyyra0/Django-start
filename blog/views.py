@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
-from .models import Post
+from .models import Post, Category
 
 
 def blog_view(request):
@@ -46,4 +46,20 @@ def blog_single(request, pk):
         'previous_post': previous_post,
         'next_post': next_post,
         'recent_posts': recent_posts,
+    })
+
+
+def category_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+
+    # همان فیلتر استاندارد (status=True و published_date گذشته)، این‌بار فقط برای این دسته‌بندی
+    posts = Post.objects.filter(
+        status=True,
+        published_date__lte=timezone.now(),
+        category=category,
+    )
+
+    return render(request, 'blog/category.html', {
+        'category': category,
+        'posts': posts,
     })

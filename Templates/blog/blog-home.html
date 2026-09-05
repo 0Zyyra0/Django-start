@@ -183,6 +183,11 @@
 							{% for post in posts %}
 							<div class="single-post row">
 								<div class="col-lg-3  col-md-3 meta-details">
+									{% if post.category %}
+									<ul class="tags">
+										<li><a href="{% url 'blog:category' post.category.slug %}">{{ post.category.title }}</a></li>
+									</ul>
+									{% endif %}
 									<div class="user-details row">
 										<p class="date col-lg-12 col-md-12 col-6">{{ post.published_date|date:"d M, Y" }} <span class="lnr lnr-calendar-full"></span></p>
 										<p class="view col-lg-12 col-md-12 col-6">{{ post.counted_view }} Views <span class="lnr lnr-eye"></span></p>
@@ -465,7 +470,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>						
 			<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>					
 			<script src="{% static 'js/owl.carousel.min.js' %}"></script>							
-			<script src="{% static 'js/mail-script.js' %}"></script>	
 			<script src="{% static 'js/main.js' %}"></script>	
 			{% include "base.html" %}
 </body>

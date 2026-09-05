@@ -5,6 +5,13 @@
 		<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/b1.jpg' %}{% endif %}" alt="{{ post.title }}">
 	</div>
 	<div class="details">
+		{% if post.category %}
+		<div class="tags">
+			<ul>
+				<li><a href="{% url 'blog:category' post.category.slug %}">{{ post.category.title }}</a></li>
+			</ul>
+		</div>
+		{% endif %}
 		<a href="{% url 'blog:single' post.pk %}"><h4 class="title">{{ post.title }}</h4></a>
 		<p>
 			{{ post.excerpt }}

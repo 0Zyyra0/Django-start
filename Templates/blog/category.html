@@ -95,34 +95,92 @@
 					</div>
 				</div>
 			</header><!-- #header -->
-		  
+
 			<!-- start banner Area -->
-			<section class="relative about-banner">	
+			<section class="banner-area relative blog-home-banner" id="home">	
 				<div class="overlay overlay-bg"></div>
 				<div class="container">				
 					<div class="row d-flex align-items-center justify-content-center">
-						<div class="about-content col-lg-12">
+						<div class="about-content blog-header-content col-lg-12">
 							<h1 class="text-white">
-								{{ post.title }}						
+								{{ category.title }}
 							</h1>	
-							<p class="text-white link-nav"><a href="{% url 'index' %}">Home </a>  <span class="lnr lnr-arrow-right"></span><a href="{% url 'blog:index' %}">Blog </a> <span class="lnr lnr-arrow-right"></span> <a href="{% url 'blog:single' post.pk %}"> {{ post.title }}</a></p>
+							<p class="text-white">
+								پست‌های دسته‌بندی {{ category.title }}
+							</p>							
 						</div>	
 					</div>
 				</div>
 			</section>
-			<!-- End banner Area -->					  
+			<!-- End banner Area -->				  
+
+			<!-- Start top-category-widget Area -->
+			<section class="top-category-widget-area pt-90 pb-90 ">
+				<div class="container">
+					<div class="row">		
+						<div class="col-lg-4">
+							<div class="single-cat-widget">
+								<div class="content relative">
+									<div class="overlay overlay-bg"></div>
+								    <a href="#" target="_blank">
+								      <div class="thumb">
+								  		 <img class="content-image img-fluid d-block mx-auto" src="{% static 'img/blog/cat-widget1.jpg' %}" alt="">
+								  	  </div>
+								      <div class="content-details">
+								        <h4 class="content-title mx-auto text-uppercase">Social life</h4>
+								        <span></span>								        
+								        <p>Enjoy your social life together</p>
+								      </div>
+								    </a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="single-cat-widget">
+								<div class="content relative">
+									<div class="overlay overlay-bg"></div>
+								    <a href="#" target="_blank">
+								      <div class="thumb">
+								  		 <img class="content-image img-fluid d-block mx-auto" src="{% static 'img/blog/cat-widget2.jpg' %}" alt="">
+								  	  </div>
+								      <div class="content-details">
+								        <h4 class="content-title mx-auto text-uppercase">Politics</h4>
+								        <span></span>								        
+								        <p>Be a part of politics</p>
+								      </div>
+								    </a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="single-cat-widget">
+								<div class="content relative">
+									<div class="overlay overlay-bg"></div>
+								    <a href="#" target="_blank">
+								      <div class="thumb">
+								  		 <img class="content-image img-fluid d-block mx-auto" src="{% static 'img/blog/cat-widget3.jpg' %}" alt="">
+								  	  </div>
+								      <div class="content-details">
+								        <h4 class="content-title mx-auto text-uppercase">Food</h4>
+								        <span></span>
+								        <p>Let the food be finished</p>
+								      </div>
+								    </a>
+								</div>
+							</div>
+						</div>												
+					</div>
+				</div>	
+			</section>
+			<!-- End top-category-widget Area -->
 			
 			<!-- Start post-content Area -->
-			<section class="post-content-area single-post-area">
+			<section class="post-content-area">
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-8 posts-list">
+							{% for post in posts %}
 							<div class="single-post row">
-								<div class="col-lg-12">
-									<div class="feature-img">
-										<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/feature-img1.jpg' %}{% endif %}" alt="{{ post.title }}">
-									</div>
-								</div>
 								<div class="col-lg-3  col-md-3 meta-details">
 									{% if post.category %}
 									<ul class="tags">
@@ -134,163 +192,47 @@
 										<p class="view col-lg-12 col-md-12 col-6">{{ post.counted_view }} Views <span class="lnr lnr-eye"></span></p>
 									</div>
 								</div>
-								<div class="col-lg-9 col-md-9">
-									<h3 class="mt-20 mb-20">{{ post.title }}</h3>
-									<div>
-										{{ post.content|linebreaks }}
+								<div class="col-lg-9 col-md-9 ">
+									<div class="feature-img">
+										<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/feature-img1.jpg' %}{% endif %}" alt="{{ post.title }}">
 									</div>
+									<a class="posts-title" href="{% url 'blog:single' post.pk %}"><h3>{{ post.title }}</h3></a>
+									<p class="excert">
+										{{ post.excerpt }}
+									</p>
+									<a href="{% url 'blog:single' post.pk %}" class="primary-btn">View More</a>
 								</div>
 							</div>
-							<div class="navigation-area">
-								<div class="row">
-									<div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
-										{% if previous_post %}
-										<div class="thumb">
-											<a href="{% url 'blog:single' previous_post.pk %}"><img class="img-fluid" src="{% if previous_post.image %}{{ previous_post.image.url }}{% else %}{% static 'img/blog/prev.jpg' %}{% endif %}" alt="{{ previous_post.title }}"></a>
-										</div>
-										<div class="arrow">
-											<a href="{% url 'blog:single' previous_post.pk %}"><span class="lnr text-white lnr-arrow-left"></span></a>
-										</div>
-										<div class="detials">
-											<p>Prev Post</p>
-											<a href="{% url 'blog:single' previous_post.pk %}"><h4>{{ previous_post.title }}</h4></a>
-										</div>
-										{% endif %}
-									</div>
-									<div class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
-										{% if next_post %}
-										<div class="detials">
-											<p>Next Post</p>
-											<a href="{% url 'blog:single' next_post.pk %}"><h4>{{ next_post.title }}</h4></a>
-										</div>
-										<div class="arrow">
-											<a href="{% url 'blog:single' next_post.pk %}"><span class="lnr text-white lnr-arrow-right"></span></a>
-										</div>
-										<div class="thumb">
-											<a href="{% url 'blog:single' next_post.pk %}"><img class="img-fluid" src="{% if next_post.image %}{{ next_post.image.url }}{% else %}{% static 'img/blog/next.jpg' %}{% endif %}" alt="{{ next_post.title }}"></a>
-										</div>
-										{% endif %}
-									</div>								
+							{% empty %}
+							<div class="single-post row">
+								<div class="col-lg-12">
+									<p class="excert">در حال حاضر هیچ پست منتشرشده‌ای وجود ندارد.</p>
 								</div>
 							</div>
-							<div class="comments-area">
-								<h4>05 Comments</h4>
-								<div class="comment-list">
-                                    <div class="single-comment justify-content-between d-flex">
-                                        <div class="user justify-content-between d-flex">
-                                            <div class="thumb">
-                                                <img src="{% static 'img/blog/c1.jpg' %}" alt="">
-                                            </div>
-                                            <div class="desc">
-                                                <h5><a href="#">Emilly Blunt</a></h5>
-                                                <p class="date">December 4, 2017 at 3:12 pm </p>
-                                                <p class="comment">
-                                                    Never say goodbye till the end comes!
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="reply-btn">
-                                               <a href="" class="btn-reply text-uppercase">reply</a> 
-                                        </div>
-                                    </div>
-                                </div>	
-								<div class="comment-list left-padding">
-                                    <div class="single-comment justify-content-between d-flex">
-                                        <div class="user justify-content-between d-flex">
-                                            <div class="thumb">
-                                                <img src="{% static 'img/blog/c2.jpg' %}" alt="">
-                                            </div>
-                                            <div class="desc">
-                                                <h5><a href="#">Elsie Cunningham</a></h5>
-                                                <p class="date">December 4, 2017 at 3:12 pm </p>
-                                                <p class="comment">
-                                                    Never say goodbye till the end comes!
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="reply-btn">
-                                               <a href="" class="btn-reply text-uppercase">reply</a> 
-                                        </div>
-                                    </div>
-                                </div>	
-								<div class="comment-list left-padding">
-                                    <div class="single-comment justify-content-between d-flex">
-                                        <div class="user justify-content-between d-flex">
-                                            <div class="thumb">
-                                                <img src="{% static 'img/blog/c3.jpg' %}" alt="">
-                                            </div>
-                                            <div class="desc">
-                                                <h5><a href="#">Annie Stephens</a></h5>
-                                                <p class="date">December 4, 2017 at 3:12 pm </p>
-                                                <p class="comment">
-                                                    Never say goodbye till the end comes!
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="reply-btn">
-                                               <a href="" class="btn-reply text-uppercase">reply</a> 
-                                        </div>
-                                    </div>
-                                </div>	
-								<div class="comment-list">
-                                    <div class="single-comment justify-content-between d-flex">
-                                        <div class="user justify-content-between d-flex">
-                                            <div class="thumb">
-                                                <img src="{% static 'img/blog/c4.jpg' %}" alt="">
-                                            </div>
-                                            <div class="desc">
-                                                <h5><a href="#">Maria Luna</a></h5>
-                                                <p class="date">December 4, 2017 at 3:12 pm </p>
-                                                <p class="comment">
-                                                    Never say goodbye till the end comes!
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="reply-btn">
-                                               <a href="" class="btn-reply text-uppercase">reply</a> 
-                                        </div>
-                                    </div>
-                                </div>	
-								<div class="comment-list">
-                                    <div class="single-comment justify-content-between d-flex">
-                                        <div class="user justify-content-between d-flex">
-                                            <div class="thumb">
-                                                <img src="{% static 'img/blog/c5.jpg' %}" alt="">
-                                            </div>
-                                            <div class="desc">
-                                                <h5><a href="#">Ina Hayes</a></h5>
-                                                <p class="date">December 4, 2017 at 3:12 pm </p>
-                                                <p class="comment">
-                                                    Never say goodbye till the end comes!
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="reply-btn">
-                                               <a href="" class="btn-reply text-uppercase">reply</a> 
-                                        </div>
-                                    </div>
-                                </div>	                                             				
-							</div>
-							<div class="comment-form">
-								<h4>Leave a Comment</h4>
-								<form>
-									<div class="form-group form-inline">
-									  <div class="form-group col-lg-6 col-md-12 name">
-									    <input type="text" class="form-control" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'">
-									  </div>
-									  <div class="form-group col-lg-6 col-md-12 email">
-									    <input type="email" class="form-control" id="email" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
-									  </div>										
-									</div>
-									<div class="form-group">
-										<input type="text" class="form-control" id="subject" placeholder="Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Subject'">
-									</div>
-									<div class="form-group">
-										<textarea class="form-control mb-10" rows="5" name="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
-									</div>
-									<a href="#" class="primary-btn text-uppercase">Post Comment</a>	
-								</form>
-							</div>
+							{% endfor %}
+		                    <nav class="blog-pagination justify-content-center d-flex">
+		                        <ul class="pagination">
+		                            <li class="page-item">
+		                                <a href="#" class="page-link" aria-label="Previous">
+		                                    <span aria-hidden="true">
+		                                        <span class="lnr lnr-chevron-left"></span>
+		                                    </span>
+		                                </a>
+		                            </li>
+		                            <li class="page-item"><a href="#" class="page-link">01</a></li>
+		                            <li class="page-item active"><a href="#" class="page-link">02</a></li>
+		                            <li class="page-item"><a href="#" class="page-link">03</a></li>
+		                            <li class="page-item"><a href="#" class="page-link">04</a></li>
+		                            <li class="page-item"><a href="#" class="page-link">09</a></li>
+		                            <li class="page-item">
+		                                <a href="#" class="page-link" aria-label="Next">
+		                                    <span aria-hidden="true">
+		                                        <span class="lnr lnr-chevron-right"></span>
+		                                    </span>
+		                                </a>
+		                            </li>
+		                        </ul>
+		                    </nav>
 						</div>
 						<div class="col-lg-4 sidebar-widgets">
 							<div class="widget-wrap">
@@ -319,14 +261,14 @@
 								<div class="single-sidebar-widget popular-post-widget">
 									<h4 class="popular-title">Popular Posts</h4>
 									<div class="popular-post-list">
-										{% for p in recent_posts %}
+										{% for post in posts|slice:":4" %}
 										<div class="single-post-list d-flex flex-row align-items-center">
 											<div class="thumb">
-												<img class="img-fluid" src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/blog/pp1.jpg' %}{% endif %}" alt="{{ p.title }}">
+												<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/pp1.jpg' %}{% endif %}" alt="{{ post.title }}">
 											</div>
 											<div class="details">
-												<a href="{% url 'blog:single' p.pk %}"><h6>{{ p.title }}</h6></a>
-												<p>{{ p.published_date|date:"d M, Y" }}</p>
+												<a href="{% url 'blog:single' post.pk %}"><h6>{{ post.title }}</h6></a>
+												<p>{{ post.published_date|date:"d M, Y" }}</p>
 											</div>
 										</div>
 										{% empty %}
