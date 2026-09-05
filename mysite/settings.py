@@ -148,3 +148,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# اگر True باشد، تمام درخواست‌های سایت (به‌جز پنل ادمین) به صفحه‌ی
+# "به‌زودی در دسترس خواهد بود" هدایت می‌شوند. قبل از راه‌اندازی نهایی
+# روی True بگذارید و بعد از آماده شدن سایت، آن را False کنید.
+MAINTENANCE_MODE = True
