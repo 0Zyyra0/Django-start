@@ -110,7 +110,7 @@
 							<div class="single-post row">
 								<div class="col-lg-12">
 									<div class="feature-img">
-										<img class="img-fluid" src="{% static 'img/blog/feature-img1.jpg' %}" alt="{{ post.title }}">
+										<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/feature-img1.jpg' %}{% endif %}" alt="{{ post.title }}">
 									</div>
 								</div>
 								<div class="col-lg-3  col-md-3 meta-details">
@@ -131,7 +131,7 @@
 									<div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
 										{% if previous_post %}
 										<div class="thumb">
-											<a href="{% url 'blog:single' previous_post.pk %}"><img class="img-fluid" src="{% static 'img/blog/prev.jpg' %}" alt="{{ previous_post.title }}"></a>
+											<a href="{% url 'blog:single' previous_post.pk %}"><img class="img-fluid" src="{% if previous_post.image %}{{ previous_post.image.url }}{% else %}{% static 'img/blog/prev.jpg' %}{% endif %}" alt="{{ previous_post.title }}"></a>
 										</div>
 										<div class="arrow">
 											<a href="{% url 'blog:single' previous_post.pk %}"><span class="lnr text-white lnr-arrow-left"></span></a>
@@ -152,7 +152,7 @@
 											<a href="{% url 'blog:single' next_post.pk %}"><span class="lnr text-white lnr-arrow-right"></span></a>
 										</div>
 										<div class="thumb">
-											<a href="{% url 'blog:single' next_post.pk %}"><img class="img-fluid" src="{% static 'img/blog/next.jpg' %}" alt="{{ next_post.title }}"></a>
+											<a href="{% url 'blog:single' next_post.pk %}"><img class="img-fluid" src="{% if next_post.image %}{{ next_post.image.url }}{% else %}{% static 'img/blog/next.jpg' %}{% endif %}" alt="{{ next_post.title }}"></a>
 										</div>
 										{% endif %}
 									</div>								
@@ -307,7 +307,7 @@
 										{% for p in recent_posts %}
 										<div class="single-post-list d-flex flex-row align-items-center">
 											<div class="thumb">
-												<img class="img-fluid" src="{% static 'img/blog/pp1.jpg' %}" alt="{{ p.title }}">
+												<img class="img-fluid" src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/blog/pp1.jpg' %}{% endif %}" alt="{{ p.title }}">
 											</div>
 											<div class="details">
 												<a href="{% url 'blog:single' p.pk %}"><h6>{{ p.title }}</h6></a>

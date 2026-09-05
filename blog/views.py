@@ -5,8 +5,9 @@ from .models import Post
 
 
 def blog_view(request):
-    # فقط پست‌هایی که زمان published_date آن‌ها از الان گذشته باشد نمایش داده شوند
-    posts = Post.objects.filter(published_date__lte=timezone.now())
+    # پست مجاز پستی است که هم ادمین انتشارش را فعال کرده باشد (status=True)
+    # و هم زمان انتشارش رسیده باشد (published_date <= الان)
+    posts = Post.objects.filter(status=True, published_date__lte=timezone.now())
     return render(request, 'blog/blog-home.html', {'posts': posts})
 
 
@@ -17,9 +18,11 @@ def blog_single(request, pk):
     post.counted_view += 1
     post.save(update_fields=['counted_view'])
 
-    # لیست کلی پست‌های منتشرشده (مرتب بر اساس تاریخ انتشار، از قدیم به جدید)
+    # لیست کلی پست‌های مجاز (status=True و published_date گذشته)، مرتب از قدیم به جدید
     published_posts = list(
-        Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+        Post.objects.filter(
+            status=True, published_date__lte=timezone.now()
+        ).order_by('published_date')
     )
 
     previous_post = None

@@ -8,6 +8,16 @@ class Post(models.Model):
         help_text='زمانی که پست باید منتشر (published) شود.'
     )
     counted_view = models.PositiveIntegerField(default=0)
+    status = models.BooleanField(
+        default=False,
+        help_text='اگر فعال باشد یعنی ادمین اجازه‌ی انتشار این پست را داده است.'
+    )
+    image = models.ImageField(
+        upload_to='blog/',
+        blank=True,
+        null=True,
+        help_text='تصویر شاخص این پست.'
+    )
 
     class Meta:
         ordering = ['-published_date']

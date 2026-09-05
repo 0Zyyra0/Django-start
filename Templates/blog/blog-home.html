@@ -180,7 +180,7 @@
 								</div>
 								<div class="col-lg-9 col-md-9 ">
 									<div class="feature-img">
-										<img class="img-fluid" src="{% static 'img/blog/feature-img1.jpg' %}" alt="{{ post.title }}">
+										<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/feature-img1.jpg' %}{% endif %}" alt="{{ post.title }}">
 									</div>
 									<a class="posts-title" href="{% url 'blog:single' post.pk %}"><h3>{{ post.title }}</h3></a>
 									<p class="excert">
@@ -250,7 +250,7 @@
 										{% for post in posts|slice:":4" %}
 										<div class="single-post-list d-flex flex-row align-items-center">
 											<div class="thumb">
-												<img class="img-fluid" src="{% static 'img/blog/pp1.jpg' %}" alt="{{ post.title }}">
+												<img class="img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'img/blog/pp1.jpg' %}{% endif %}" alt="{{ post.title }}">
 											</div>
 											<div class="details">
 												<a href="{% url 'blog:single' post.pk %}"><h6>{{ post.title }}</h6></a>
