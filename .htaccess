@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# یکسان‌سازی آدرس سایت:
+# اگر درخواست از www.domain.ir یا نسخه‌ی HTTP بیاید (هر کدام یا هر دو)،
+# در یک مرحله به https://domain.ir ریدایرکت (301) می‌شود.
+RewriteCond %{HTTP_HOST} ^www\.domain\.ir$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://domain.ir/$1 [L,R=301]
