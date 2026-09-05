@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import Truncator
 
 
 class Post(models.Model):
@@ -24,3 +25,8 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def excerpt(self):
+        # به‌جای بریدن متن بر اساس تعداد کاراکتر (Truncator.chars)،
+        # این‌جا بر اساس تعداد کلمه (Truncator.words) خلاصه می‌سازیم
+        return Truncator(self.content).words(30, truncate=' ...')
