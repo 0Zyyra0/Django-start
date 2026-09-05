@@ -102,6 +102,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# احراز هویت سفارشی: اجازه‌ی ورود هم با نام کاربری و هم با ایمیل
+AUTHENTICATION_BACKENDS = [
+    'website.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
+# در حالت توسعه، ایمیل‌های فراموشی رمز عبور به‌جای ارسال واقعی،
+# توی کنسول ترمینال چاپ می‌شوند تا بشود لینک ریست را دید و تست کرد.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
