@@ -79,7 +79,7 @@
 						          </li>					                		
 				            </ul>
 				          </li>					          					          		          
-				          <li><a href="#">Contact</a></li>
+				          <li><a href="{% url 'contact' %}">Contact</a></li>
 				        </ul>
 				      </nav><!-- #nav-menu-container -->					      		  
 					</div>
@@ -388,7 +388,7 @@
 											<li><a href="#">Team</a></li>
 											<li><a href="#">Pricing</a></li>
 											<li><a href="#">Blog</a></li>
-											<li><a href="#">Contact</a></li>
+											<li><a href="{% url 'contact' %}">Contact</a></li>
 										</ul>
 									</div>										
 								</div>							
@@ -457,5 +457,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script src="{% static 'js/owl.carousel.min.js' %}"></script>							
 			<script src="{% static 'js/mail-script.js' %}"></script>	
 			<script src="{% static 'js/main.js' %}"></script>	
-		</body>
+			{% include "base.html" %}
+</body>
 	</html>
