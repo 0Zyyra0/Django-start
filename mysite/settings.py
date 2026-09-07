@@ -26,6 +26,8 @@ SECRET_KEY = 'django-insecure-o-k&e=42c8kvzz+58m96on3-u!ea-x7v*yv*na3e!o^r@po-6)
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# هنگام آپلود روی هاست واقعی، دامنه‌ی سایت را این‌جا اضافه کنید، مثلاً:
+# ALLOWED_HOSTS = ['domain.ir', 'www.domain.ir']
 
 
 # Application definition
@@ -37,11 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     'compressor',
     'website.apps.WebsiteConfig',
     'blog'
 
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -169,4 +175,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # اگر True باشد، تمام درخواست‌های سایت (به‌جز پنل ادمین) به صفحه‌ی
 # "به‌زودی در دسترس خواهد بود" هدایت می‌شوند. قبل از راه‌اندازی نهایی
 # روی True بگذارید و بعد از آماده شدن سایت، آن را False کنید.
-MAINTENANCE_MODE = True
+MAINTENANCE_MODE = False

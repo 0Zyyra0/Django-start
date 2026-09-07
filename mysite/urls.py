@@ -18,6 +18,15 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+
+from mysite.sitemaps import PostSitemap, CategorySitemap, StaticViewSitemap
+
+sitemaps = {
+    'posts': PostSitemap,
+    'categories': CategorySitemap,
+    'pages': StaticViewSitemap,
+}
 
 
 if getattr(settings, 'MAINTENANCE_MODE', False):
@@ -34,6 +43,14 @@ else:
         # path ( 'url address' , ' view ' )
         path('', include('website.urls')),
         path('blog/', include('blog.urls')),
+
+        # سئو: نقشه‌ی سایت و robots.txt
+        path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+        path(
+            'robots.txt',
+            TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
+            name='robots_txt',
+        ),
     ]
 
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
