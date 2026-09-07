@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 from .forms import TicketForm, SignUpForm, EmailOrUsernameLoginForm
+from .models import NewsletterSubscriber
 
 
 def index_view(request):
@@ -86,3 +89,22 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'با موفقیت خارج شدید.')
     return redirect('index')
+
+
+def newsletter_signup_view(request):
+    """
+    فرم خبرنامه‌ای که در فوتر همه‌ی صفحات هست. قبلاً به یک آدرس Mailchimp
+    متعلق به سازنده‌ی اصلی تمپلیت اشاره می‌کرد؛ الان ایمیل واقعاً در
+    دیتابیس خودمان ذخیره می‌شود.
+    """
+    if request.method == 'POST':
+        email = request.POST.get('EMAIL', '').strip()
+        try:
+            validate_email(email)
+            NewsletterSubscriber.objects.get_or_create(email=email)
+            messages.success(request, 'با موفقیت در خبرنامه عضو شدید!')
+        except ValidationError:
+            messages.error(request, 'ایمیل وارد شده معتبر نیست.')
+
+    referer = request.META.get('HTTP_REFERER')
+    return redirect(referer or 'index')

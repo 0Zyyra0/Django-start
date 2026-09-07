@@ -4,5 +4,6 @@ Disallow: /login/
 Disallow: /signup/
 Disallow: /password-reset/
 Disallow: /reset/
+Disallow: /blog/search/
 
 Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

@@ -1,7 +1,7 @@
 from django import template
 from django.utils import timezone
 
-from blog.models import Post
+from blog.models import Post, Category
 
 register = template.Library()
 
@@ -19,3 +19,23 @@ def latest_posts(count=6):
     ).order_by('-published_date')[:count]
 
     return {'posts': posts}
+
+
+@register.inclusion_tag('blog/tags/category_list.html')
+def category_list():
+    """
+    لیست دسته‌بندی‌ها به همراه تعداد پست منتشرشده‌ی هرکدام.
+    استفاده در تمپلیت: {% load blog_tags %}  ...  {% category_list %}
+    """
+    now = timezone.now()
+    categories = Category.objects.all()
+
+    data = [
+        {
+            'category': category,
+            'count': category.posts.filter(status=True, published_date__lte=now).count(),
+        }
+        for category in categories
+    ]
+
+    return {'categories': data}

@@ -11,13 +11,13 @@
 		<!-- Author Meta -->
 		<meta name="author" content="colorlib">
 		<!-- Meta Description -->
-		<meta name="description" content="مشاهده تمام پست‌های دسته‌بندی {{ category.title }}.">
+		<meta name="description" content="نتایج جست‌وجو برای: {{ query }}">
 		<!-- Meta Keyword -->
 		<meta name="keywords" content="">
 		<!-- meta character set -->
 		<meta charset="UTF-8">
 		<!-- Site Title -->
-		<title>{{ category.title }} | Travel & Adventure</title>
+		<title>نتایج جست‌وجو برای «{{ query }}» | Travel & Adventure</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
 			<!--
@@ -107,10 +107,10 @@
 					<div class="row d-flex align-items-center justify-content-center">
 						<div class="about-content blog-header-content col-lg-12">
 							<h1 class="text-white">
-								{{ category.title }}
+								نتایج جست‌وجو
 							</h1>	
 							<p class="text-white">
-								پست‌های دسته‌بندی {{ category.title }}
+								نتایج جست‌وجو برای: «{{ query }}»
 							</p>							
 						</div>	
 					</div>
@@ -210,7 +210,7 @@
 							{% empty %}
 							<div class="single-post row">
 								<div class="col-lg-12">
-									<p class="excert">در حال حاضر هیچ پست منتشرشده‌ای وجود ندارد.</p>
+									<p class="excert">هیچ نتیجه‌ای برای «{{ query }}» پیدا نشد.</p>
 								</div>
 							</div>
 							{% endfor %}

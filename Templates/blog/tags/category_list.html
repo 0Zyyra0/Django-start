@@ -1,0 +1,10 @@
+{% for entry in categories %}
+<li>
+	<a href="{% url 'blog:category' entry.category.slug %}" class="d-flex justify-content-between">
+		<p>{{ entry.category.title }}</p>
+		<p>{{ entry.count }}</p>
+	</a>
+</li>
+{% empty %}
+<li><p>هنوز دسته‌بندی‌ای ثبت نشده است.</p></li>
+{% endfor %}

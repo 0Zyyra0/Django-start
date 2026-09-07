@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.db import models
 
 from .models import Post, Category
 
@@ -62,4 +63,19 @@ def category_view(request, slug):
     return render(request, 'blog/category.html', {
         'category': category,
         'posts': posts,
+    })
+
+
+def search_view(request):
+    query = request.GET.get('search', '').strip()
+
+    posts = Post.objects.filter(status=True, published_date__lte=timezone.now())
+    if query:
+        posts = posts.filter(
+            models.Q(title__icontains=query) | models.Q(content__icontains=query)
+        )
+
+    return render(request, 'blog/search.html', {
+        'posts': posts,
+        'query': query,
     })

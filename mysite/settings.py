@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o-k&e=42c8kvzz+58m96on3-u!ea-x7v*yv*na3e!o^r@po-6)'
+# روی هاست واقعی، به‌جای مقدار پیش‌فرض زیر، متغیر محیطی DJANGO_SECRET_KEY را تنظیم کنید.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-o-k&e=42c8kvzz+58m96on3-u!ea-x7v*yv*na3e!o^r@po-6)'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# روی هاست واقعی، متغیر محیطی DJANGO_DEBUG را برابر False تنظیم کنید.
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
-# هنگام آپلود روی هاست واقعی، دامنه‌ی سایت را این‌جا اضافه کنید، مثلاً:
-# ALLOWED_HOSTS = ['domain.ir', 'www.domain.ir']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',') if os.environ.get('DJANGO_ALLOWED_HOSTS') else []
+# هنگام آپلود روی هاست واقعی، دامنه‌ی سایت را با متغیر محیطی زیر اضافه کنید، مثلاً:
+# DJANGO_ALLOWED_HOSTS=domain.ir,www.domain.ir
 
 
 # Application definition
@@ -128,9 +134,9 @@ DEFAULT_FROM_EMAIL = 'noreply@example.com'
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa-ir'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -176,3 +182,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # "به‌زودی در دسترس خواهد بود" هدایت می‌شوند. قبل از راه‌اندازی نهایی
 # روی True بگذارید و بعد از آماده شدن سایت، آن را False کنید.
 MAINTENANCE_MODE = False
+
+# --- تنظیمات امنیتی مخصوص محیط پروداکشن ---
+# این‌ها فقط وقتی DEBUG=False باشد (یعنی روی هاست واقعی) فعال می‌شوند.
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
