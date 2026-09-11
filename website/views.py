@@ -1,12 +1,26 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from .forms import TicketForm, SignUpForm, EmailOrUsernameLoginForm
+from .forms import (
+    TicketForm,
+    SignUpForm,
+    EmailOrUsernameLoginForm,
+    CustomPasswordResetForm,
+    CustomSetPasswordForm,
+)
 from .models import NewsletterSubscriber
+from .tokens import generate_reset_token, verify_reset_token
 
 
 def index_view(request):
@@ -89,6 +103,102 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'با موفقیت خارج شدید.')
     return redirect('index')
+
+
+def password_reset_view(request):
+    """
+    مرحله‌ی اول بازیابی رمز عبور (سفارشی): کاربر ایمیلش را وارد می‌کند.
+    اگر کاربری با آن ایمیل پیدا شود، یک لینک ریست (شامل uid و توکن
+    سفارشی) برایش ایمیل می‌شود. برای اینکه نشود فهمید چه ایمیل‌هایی در
+    سایت ثبت‌نام کرده‌اند، در هر دو حالت (پیدا شد/نشد) کاربر به همان صفحه‌ی
+    «لینک ارسال شد» هدایت می‌شود.
+    """
+    if request.user.is_authenticated:
+        return redirect('index')
+
+    if request.method == 'POST':
+        form = CustomPasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            users = User.objects.filter(email__iexact=email, is_active=True)
+
+            for user in users:
+                # کاربری که رمز قابل استفاده ندارد (مثلاً فقط با گوگل وارد می‌شود)
+                # نباید بتواند رمز عبور «تنظیم» کند از این مسیر
+                if not user.has_usable_password():
+                    continue
+
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = generate_reset_token(user)
+                reset_path = reverse(
+                    'password_reset_confirm',
+                    kwargs={'uidb64': uid, 'token': token},
+                )
+                reset_url = request.build_absolute_uri(reset_path)
+
+                subject = render_to_string(
+                    'website/password_reset_subject.txt', {}
+                ).strip().replace('\n', ' ')
+                message = render_to_string('website/password_reset_email.html', {
+                    'user': user,
+                    'protocol': request.scheme,
+                    'domain': request.get_host(),
+                    'uid': uid,
+                    'token': token,
+                })
+
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=False,
+                )
+
+            return redirect('password_reset_done')
+    else:
+        form = CustomPasswordResetForm()
+
+    return render(request, 'website/password_reset.html', {'form': form})
+
+
+def password_reset_done_view(request):
+    return render(request, 'website/password_reset_done.html')
+
+
+def password_reset_confirm_view(request, uidb64, token):
+    """
+    مرحله‌ی دوم بازیابی رمز عبور (سفارشی): کاربر از روی لینک ایمیل
+    به اینجا می‌آید. uidb64 را باز می‌کنیم تا کاربر را پیدا کنیم و
+    توکن را با verify_reset_token (منطق دستی خودمان) اعتبارسنجی می‌کنیم.
+    """
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    validlink = user is not None and verify_reset_token(user, token)
+
+    form = None
+    if validlink:
+        if request.method == 'POST':
+            form = CustomSetPasswordForm(user=user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'رمز عبور شما با موفقیت تغییر کرد.')
+                return redirect('password_reset_complete')
+        else:
+            form = CustomSetPasswordForm(user=user)
+
+    return render(request, 'website/password_reset_confirm.html', {
+        'form': form,
+        'validlink': validlink,
+    })
+
+
+def password_reset_complete_view(request):
+    return render(request, 'website/password_reset_complete.html')
 
 
 def newsletter_signup_view(request):

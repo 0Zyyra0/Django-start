@@ -125,8 +125,11 @@
 								{% csrf_token %}
 								<div class="row">
 									<div class="col-lg-12 form-group">
+										{{ form.non_field_errors }}
 										{{ form.username }}
+										{{ form.username.errors }}
 										{{ form.password }}
+										{{ form.password.errors }}
 									</div>
 									<div class="col-lg-12">
 										<button type="submit" class="genric-btn primary" style="float: right;">Login</button>
@@ -247,6 +250,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script src="{% static 'js/main.js' %}"></script>	
 {% endcompress %}
 			{% include "base.html" %}
-	{% include "base.html" %}
 </body>
 	</html>

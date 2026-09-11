@@ -1,6 +1,5 @@
 
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from website.views import *
 
 
@@ -15,37 +14,15 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('newsletter/', newsletter_signup_view, name='newsletter_signup'),
 
-    # فراموشی رمز عبور - با استفاده از توابع آماده‌ی django.contrib.auth
-    path(
-        'password-reset/',
-        auth_views.PasswordResetView.as_view(
-            template_name='website/password_reset.html',
-            email_template_name='website/password_reset_email.html',
-            subject_template_name='website/password_reset_subject.txt',
-            success_url='/password-reset/done/',
-        ),
-        name='password_reset',
-    ),
-    path(
-        'password-reset/done/',
-        auth_views.PasswordResetDoneView.as_view(
-            template_name='website/password_reset_done.html'
-        ),
-        name='password_reset_done',
-    ),
+    # فراموشی رمز عبور - پیاده‌سازی کاملاً سفارشی (بدون توابع آماده‌ی
+    # django.contrib.auth.views)؛ منطق در website/views.py و
+    # website/tokens.py نوشته شده است.
+    path('password-reset/', password_reset_view, name='password_reset'),
+    path('password-reset/done/', password_reset_done_view, name='password_reset_done'),
     path(
         'reset/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='website/password_reset_confirm.html',
-            success_url='/reset/done/',
-        ),
+        password_reset_confirm_view,
         name='password_reset_confirm',
     ),
-    path(
-        'reset/done/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='website/password_reset_complete.html'
-        ),
-        name='password_reset_complete',
-    ),
+    path('reset/done/', password_reset_complete_view, name='password_reset_complete'),
 ]
